@@ -14,7 +14,7 @@ fun InicioScreen(
     onVerMediciones: () -> Unit,
     onRegistrar: () -> Unit
 ) {
-    val alertas = mediciones.count { it.nivel < 0.8 }
+    val alertas = mediciones.count { it.nivel < 3.0 || it.nivel > 5.0 }
 
     Scaffold(
         topBar = {
