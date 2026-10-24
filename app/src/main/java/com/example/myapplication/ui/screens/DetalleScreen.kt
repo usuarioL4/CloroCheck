@@ -6,6 +6,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.data.local.MedicionEntity
+import com.example.myapplication.model.EstadoCloro
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -51,16 +52,25 @@ fun DetalleScreen(
             Text("Punto: ${medicion.punto}")
             Text("Nivel: ${medicion.nivel} mg/L")
             Text("Fecha: $fecha")
+            val estado = EstadoCloro.desdeNivel(medicion.nivel)
 
             Text(
-                if (medicion.nivel < 0.8) {
-                    "Estado: Revisar"
-                } else {
-                    "Estado: Normal"
+                text = "Estado: ${estado?.name ?: "Sin clasificar"}",
+                color = when (estado) {
+                    EstadoCloro.NORMAL ->
+                        MaterialTheme.colorScheme.primary
+
+                    EstadoCloro.ADVERTENCIA ->
+                        MaterialTheme.colorScheme.tertiary
+
+                    EstadoCloro.CRITICO ->
+                        MaterialTheme.colorScheme.error
+
+                    null ->
+                        MaterialTheme.colorScheme.secondary
                 },
                 style = MaterialTheme.typography.titleMedium
             )
-
             OutlinedTextField(
                 value = accion,
                 onValueChange = { accion = it },

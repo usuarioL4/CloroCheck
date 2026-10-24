@@ -6,13 +6,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.data.local.MedicionEntity
+import com.example.myapplication.model.EstadoCloro
 
 @Composable
 fun MedicionCard(
     medicion: MedicionEntity,
     onVerDetalle: () -> Unit
 ) {
-    val revisar = medicion.nivel < 0.8
 
     Card(
         modifier = Modifier
@@ -29,14 +29,21 @@ fun MedicionCard(
             )
             Text("Punto: ${medicion.punto}")
             Text("Nivel: ${medicion.nivel} mg/L")
+            val estado = EstadoCloro.desdeNivel(medicion.nivel)
 
             Text(
-                text = if (revisar) "Revisar" else "Normal",
-                color = if (revisar) {
-                    MaterialTheme.colorScheme.error
-                } else {
-                    MaterialTheme.colorScheme.primary
-                }
+                text = "Estado: ${estado?.name ?: "Sin clasificar"}",
+                color = when (estado) {
+                    EstadoCloro.NORMAL ->
+                        MaterialTheme.colorScheme.primary
+                    EstadoCloro.ADVERTENCIA ->
+                        MaterialTheme.colorScheme.tertiary
+                    EstadoCloro.CRITICO ->
+                        MaterialTheme.colorScheme.error
+                    null ->
+                        MaterialTheme.colorScheme.secondary
+                },
+                style = MaterialTheme.typography.titleMedium
             )
 
             OutlinedButton(onClick = onVerDetalle) {

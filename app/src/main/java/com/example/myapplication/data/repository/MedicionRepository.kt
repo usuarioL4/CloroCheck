@@ -14,7 +14,7 @@ class MedicionRepository(
     suspend fun buscarPorId(id: Long): MedicionEntity? =
         dao.buscarPorId(id)
 
-    suspend fun insertar(medicion: MedicionEntity) =
+    suspend fun insertar(medicion: MedicionEntity): Long =
         dao.insertar(medicion)
 
     suspend fun actualizarAccion(id: Long, accion: String) =

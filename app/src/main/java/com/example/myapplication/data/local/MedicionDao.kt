@@ -15,7 +15,7 @@ interface MedicionDao {
     suspend fun buscarPorId(id: Long): MedicionEntity?
 
     @Insert
-    suspend fun insertar(medicion: MedicionEntity)
+    suspend fun insertar(medicion: MedicionEntity): Long
 
     @Query("UPDATE mediciones SET accionCorrectiva = :accion WHERE id = :id")
     suspend fun actualizarAccion(
