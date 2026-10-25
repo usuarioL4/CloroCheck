@@ -1,6 +1,8 @@
 package com.example.myapplication.ui.screens
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -16,7 +18,8 @@ import java.util.Locale
 fun DetalleScreen(
     medicion: MedicionEntity,
     onGuardarAccion: (String) -> Unit,
-    onVolver: () -> Unit
+    onVolver: () -> Unit,
+    onEliminar: () -> Unit
 ) {
     var accion by remember(medicion.id) {
         mutableStateOf(medicion.accionCorrectiva.orEmpty())
@@ -36,6 +39,15 @@ fun DetalleScreen(
                 navigationIcon = {
                     TextButton(onClick = onVolver) {
                         Text("Volver")
+                    }
+                },
+                actions = {
+                    IconButton(onClick = onEliminar) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = "Eliminar medición",
+                            tint = MaterialTheme.colorScheme.error
+                        )
                     }
                 }
             )
@@ -71,6 +83,9 @@ fun DetalleScreen(
                 },
                 style = MaterialTheme.typography.titleMedium
             )
+            if(!medicion.accionCorrectiva.isNullOrBlank()){
+                Text("Acción guardada: ${medicion.accionCorrectiva}")
+            }
             OutlinedTextField(
                 value = accion,
                 onValueChange = { accion = it },
@@ -86,6 +101,7 @@ fun DetalleScreen(
             ) {
                 Text("Guardar observación")
             }
+
         }
     }
 }

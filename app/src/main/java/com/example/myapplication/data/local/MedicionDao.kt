@@ -22,4 +22,6 @@ interface MedicionDao {
         id: Long,
         accion: String
     )
+    @Query("DELETE FROM mediciones WHERE id = :id")
+    suspend fun eliminarPorId(id: Long)
 }

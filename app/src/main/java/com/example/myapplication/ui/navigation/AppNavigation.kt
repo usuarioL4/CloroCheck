@@ -95,7 +95,8 @@ fun AppNavigation(viewModel: MedicionViewModel) {
                     },
                     onRegistrar = {
                         navController.navigate("registro")
-                    }
+                    },
+                    totalAlertasAbiertas = alertas.size
                 )
             }
 
@@ -156,6 +157,10 @@ fun AppNavigation(viewModel: MedicionViewModel) {
                             )
                         },
                         onVolver = {
+                            navController.popBackStack()
+                        },
+                        onEliminar = {
+                            viewModel.eliminarMedicion(medicion.id)
                             navController.popBackStack()
                         }
                     )

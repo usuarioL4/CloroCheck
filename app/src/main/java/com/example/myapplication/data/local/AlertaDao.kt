@@ -23,4 +23,15 @@ interface AlertaDao {
         ORDER BY fechaCreacion DESC
     """)
     fun observarAbiertas(): Flow<List<AlertaEntity>>
+
+    @Query("UPDATE alertas SET accionCorrectiva = :accion WHERE id = :id")
+    suspend fun actualizarAccion(id: Long, accion: String)
+    @Query("""
+    UPDATE alertas
+    SET abierta = 0, fechaCierre = :fecha
+    WHERE id = :id
+""")
+    suspend fun cerrarAlerta(id: Long, fecha: Long)
+    @Query("DELETE FROM alertas WHERE medicionId = :medicionId")
+    suspend fun eliminarPorMedicionId(medicionId: Long)
 }
