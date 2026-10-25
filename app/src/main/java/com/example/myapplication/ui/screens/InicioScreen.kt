@@ -93,9 +93,6 @@ fun InicioScreen(
                     )
                 }
             }
-            Text(
-                text = "Valores: ${mediciones.map { it.nivel }}"
-            )
 
             Card(
                 modifier = Modifier.fillMaxWidth()

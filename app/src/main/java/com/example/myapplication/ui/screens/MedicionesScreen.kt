@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import com.example.myapplication.data.local.MedicionEntity
 import com.example.myapplication.model.EstadoCloro
 import com.example.myapplication.ui.components.MedicionCard
-
+import androidx.compose.foundation.layout.FlowRow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -87,17 +87,19 @@ fun MedicionesScreen(
                 modifier = Modifier.padding(top = 12.dp, bottom = 6.dp)
             )
 
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(6.dp)
+            FlowRow(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                listOf("Todos", "Normal", "Advertencia", "Crítico"
-                ).forEach { estado ->
-                    FilterChip(
-                        selected = estadoSeleccionado == estado,
-                        onClick = { estadoSeleccionado = estado },
-                        label = { Text(estado) }
-                    )
-                }
+                listOf("Todos", "Normal", "Advertencia", "Crítico")
+                    .forEach { estado ->
+                        FilterChip(
+                            selected = estadoSeleccionado == estado,
+                            onClick = { estadoSeleccionado = estado },
+                            label = { Text(estado) }
+                        )
+                    }
             }
 
             Spacer(Modifier.height(8.dp))
