@@ -9,12 +9,18 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.data.local.AlertaEntity
@@ -38,6 +44,7 @@ fun AlertasScreen(viewModel: MedicionViewModel) {
             text = "Alertas abiertas",
             style = MaterialTheme.typography.headlineMedium
         )
+
         Spacer(modifier = Modifier.height(16.dp))
 
         if (alertas.isEmpty()) {
@@ -46,30 +53,82 @@ fun AlertasScreen(viewModel: MedicionViewModel) {
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(alertas) { alerta ->
-                    AlertaCard(alerta)
-                } } }
+                items(alertas, key = { it.id }) { alerta ->
+                    AlertaCard(
+                        alerta = alerta,
+                        viewModel = viewModel
+                    )
+                }
+            }
+        }
     }
 }
 
 @Composable
-private fun AlertaCard(alerta: AlertaEntity) {
-
+private fun AlertaCard(
+    alerta: AlertaEntity,
+    viewModel: MedicionViewModel
+) {
     val fecha = SimpleDateFormat(
         "dd/MM/yyyy HH:mm",
         Locale.getDefault()
     ).format(Date(alerta.fechaCreacion))
 
-    Card(modifier = Modifier.fillMaxWidth()) {
+    var accion by remember(alerta.id) {
+        mutableStateOf(alerta.accionCorrectiva.orEmpty())
+    }
+
+    Card(
+        modifier = Modifier.fillMaxWidth()
+    ) {
         Column(
-            modifier = Modifier.padding(16.dp)
-        ) { Text(
-            text = EstadoCloro.mensajeDesdeNivel(alerta.nivel),
-            style = MaterialTheme.typography.titleMedium
-        )
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                text = EstadoCloro.mensajeDesdeNivel(alerta.nivel),
+                style = MaterialTheme.typography.titleMedium
+            )
+
             Text("Granja: ${alerta.granja}")
             Text("Punto: ${alerta.punto}")
             Text("Nivel de cloro: ${alerta.nivel}")
+            Text("Fecha: $fecha")
+
+            OutlinedTextField(
+                value = accion,
+                onValueChange = { accion = it },
+                label = { Text("Acción correctiva") },
+                placeholder = {
+                    Text("Describe qué se hizo")
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Button(
+                onClick = {
+                    viewModel.guardarAccionAlerta(
+                        alerta.id,
+                        accion
+                    )
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Guardar acción")
+
+            }
+            OutlinedButton(
+                onClick = {
+                    viewModel.cerrarAlerta(alerta.id)
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Cerrar alerta")
+            }
+
+            if (!alerta.accionCorrectiva.isNullOrBlank()) {
+                Text("Acción guardada: ${alerta.accionCorrectiva}")
+            }
         }
     }
 }

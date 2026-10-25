@@ -65,6 +65,26 @@ class MedicionViewModel(
             repository.actualizarAccion(id, accion.trim())
         }
     }
+
+    fun guardarAccionAlerta(id: Long, accion: String) {
+        viewModelScope.launch {
+            alertaRepository.actualizarAccion(id, accion.trim())
+        }
+    }
+    fun cerrarAlerta(id: Long) {
+        viewModelScope.launch {
+            alertaRepository.cerrarAlerta(
+                id,
+                System.currentTimeMillis()
+            )
+        }
+    }
+    fun eliminarMedicion(id: Long) {
+        viewModelScope.launch {
+            alertaRepository.eliminarPorMedicionId(id)
+            repository.eliminarPorId(id)
+        }
+    }
 }
 
 class MedicionViewModelFactory(

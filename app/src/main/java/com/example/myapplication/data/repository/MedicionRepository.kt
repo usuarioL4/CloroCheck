@@ -19,4 +19,7 @@ class MedicionRepository(
 
     suspend fun actualizarAccion(id: Long, accion: String) =
         dao.actualizarAccion(id, accion)
+    suspend fun eliminarPorId(id: Long) {
+        dao.eliminarPorId(id)
+    }
 }
